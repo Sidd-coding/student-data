@@ -1,25 +1,46 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+
 import './App.css';
+import Header from './Component/Header';
+
+
 
 function App() {
+
+  const [student, setStudent] = useState({
+    //dummy data
+    name: '',
+    image: '',
+    remaining_time: '',
+    studata: []
+  });
+
+  React.useEffect(() => {
+    fetch("https://my-json-server.typicode.com/e-developersworld/dummy_notes/noteInfo")
+      .then(results => results.json())
+      .then(record => {
+        console.log(record);
+        const { first_name, middle_name, last_name, profile_picture } = record.student_details;
+
+
+        //default data 
+        setStudent({
+          name: `${first_name} ${middle_name} ${last_name}`,
+          image: profile_picture,
+          remaining_time: record.completed_datetime,
+          studata: record.answers
+        })
+      });
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header student={student} />
+
     </div>
   );
 }
+
+
 
 export default App;
